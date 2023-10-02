@@ -1,0 +1,11 @@
+{
+    "size": [32, 32],
+    "snake_size": 3,
+    "wall": 255,
+    "food_block": 64,
+    "snake_block": 100,
+    "movement_directions": [[-1, 0], [0, 1], [1, 0], [0, -1]],
+    "dead_reward":  -1.0,
+    "move_reward": 0.0,
+    "eat_reward": 1
+}
