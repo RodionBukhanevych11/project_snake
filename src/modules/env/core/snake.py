@@ -10,7 +10,7 @@ class Snake:
         """
         # Information snake need to know to make the move
         self.snake_block = config["snake_block"]
-        self.snake_length = ...
+        self.snake_length = config["snake_length"]
         self.directions = ...
         self.current_direction_index = direction_index
         # Alive identifier
