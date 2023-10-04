@@ -12,7 +12,6 @@ from .utils.renderer import Renderer
         - OBS_ZOOM: zoom the observation (only for RGB mode, FIXME)
 '''
 
-
 class SnakeEnv(gym.Env):
     metadata = {
         'render': ['human', 'rgb_array'],
