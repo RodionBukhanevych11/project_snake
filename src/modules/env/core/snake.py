@@ -11,30 +11,32 @@ class Snake:
         # Information snake need to know to make the move
         self.snake_block = config["snake_block"]
         self.snake_length = config["snake_length"]
-        self.directions = ...
+        self.directions = config["movement_directions"]
         self.current_direction_index = direction_index
         # Alive identifier
-        self.alive = ...
+        self.alive = True
         # Place the snake
-        self.blocks = ...
+        self.blocks = [head_position]
         current_position = np.array(head_position)
-        for i in range(1, self.snake_length):
+        for _ in range(1, self.snake_length):
             # Direction inverse of moving
-            current_position = current_position - ...
+            current_position = current_position - self.directions[direction_index]
             self.blocks.append(tuple(current_position))
 
-    def step(self, action) -> Tuple[Tuple, Tuple]:
+    def step(self, action: int) -> Tuple[Tuple, Tuple]:
         # Execute one-time step within the environment
         """
                @param action: int
                @param return: tuple, tuple
                """
         # Check if action can be performed (do nothing if in the same direction or opposite)
-        ...
+        if action != -self.current_direction_index:
+            self.current_direction_index = action
         # Remove tail
-        tail = ...
+        tail = self.blocks[-1]
+        self.blocks = self.blocks[:-1]
         # Check new head
-        ...
+        new_head = np.array(self.blocks[0]) + np.array(self.directions[self.current_direction_index])
         # Add new head
-        new_head = ...
+        self.blocks = [new_head] + self.blocks
         return new_head, tail
