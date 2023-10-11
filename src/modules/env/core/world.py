@@ -13,6 +13,7 @@ class World:
         @param food_position: tuple
         """
         # for custom init
+        self.config = config
         self.start_position = start_position
         self.start_direction_index = start_direction_index
         self.food_position = food_position
@@ -23,17 +24,17 @@ class World:
         self.food = config["food_block"]
         self.wall = config["wall"]
         self.directions = config["directions"]
+        self.snake_size = config["snake_size"]
         # Init a numpy matrix with zeros of predefined size
         self.size = size
         self.world = np.zeros(size)
         # Fill in the indexes gaps to add walls to the grid world
         self.world[0,:] = self.wall
-        ...
-        ...
-        ...
-        ...
+        self.world[:, 0] = self.wall
+        self.world[:, -1] = self.wall
+        self.world[-1, :] = self.wall 
         # Get available positions for placing food (choose all positions where world block = 0)
-        self.available_food_positions = ...
+        self.available_food_positions = list(zip(*np.where(self.world == 0)))
         # Init snake
         self.snake = self.init_snake()
         # Set food
@@ -44,10 +45,11 @@ class World:
         Initialize a snake
         """
         # choose a random position between [SNAKE_SIZE and SIZE - SNAKE_SIZE]
-        start_position = ...
+        start_position = random.randint(self.snake_size, self.size[0] - self.snake), \
+                         random.randint(self.snake_size, self.size[0] - self.snake)
         # choose a random direction index
-        start_direction_index = ...
-        new_snake = ...
+        start_direction_index = random.randint(0,3)
+        new_snake = Snake(start_position, start_direction_index, self.config)
 
         return new_snake
 
