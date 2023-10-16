@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Tuple
+from typing import Tuple, List, Dict
 
 
 class Snake:
@@ -23,7 +23,7 @@ class Snake:
             current_position = current_position - self.directions[direction_index]
             self.blocks.append(tuple(current_position))
 
-    def step(self, action: int) -> Tuple[Tuple, Tuple]:
+    def step(self, action: int) -> tuple[Tuple, Tuple]:
         # Execute one-time step within the environment
         """
                @param action: int
