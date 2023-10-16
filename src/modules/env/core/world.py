@@ -29,7 +29,7 @@ class World:
         self.size = size
         self.world = np.zeros(size)
         # Fill in the indexes gaps to add walls to the grid world
-        self.world[0,:] = self.wall
+        self.world[0, :] = self.wall
         self.world[:, 0] = self.wall
         self.world[:, -1] = self.wall
         self.world[-1, :] = self.wall 
@@ -59,10 +59,10 @@ class World:
         """
         snake = self.snake if self.snake.alive else None
         # Update available positions for food placement considering snake location
-        available_food_positions = ...
+        available_food_positions = list(zip(*np.where(self.world == 0)))
         chosen_position = random.sample(available_food_positions,1)
         # init new food
-        self.world[..., ...] = self.FOOD
+        self.world[chosen_position] = self.FOOD
 
     def get_observation(self):
         """
@@ -72,9 +72,8 @@ class World:
         snake = self.snake if self.snake.alive else None
         if snake:
             for block in snake.blocks:
-                obs[..., ...] = ...
+                obs[block] = self.world[block]
             # snakes head
-            obs[..., ...] = ...
         return obs
 
     def move_snake(self, action):
