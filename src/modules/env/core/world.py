@@ -57,12 +57,12 @@ class World:
         """
         Initialize a peace of food
         """
-        snake = self.snake if self.snake.alive else None
         # Update available positions for food placement considering snake location
         available_food_positions = list(zip(*np.where(self.world == 0)))
         chosen_position = random.sample(available_food_positions,1)
         # init new food
-        self.world[chosen_position] = self.FOOD
+        self.food_position = chosen_position
+        self.world[chosen_position] = self.food
 
     def get_observation(self):
         """
@@ -72,7 +72,7 @@ class World:
         snake = self.snake if self.snake.alive else None
         if snake:
             for block in snake.blocks:
-                obs[block] = self.world[block]
+                obs[block] = self.snake.snake_block
             # snakes head
         return obs
 
@@ -81,37 +81,38 @@ class World:
         Action executing
         """
         # define reward variable
-        reward = ...
+        reward = 0
         # food needed flag
-        new_food_needed = ...
+        new_food_needed = False
         # check if snake is alive
         if self.snake.alive:
             # perform a step (from Snake class)
-            new_snake_head, old_snake_tail = ...
+            new_snake_head, old_snake_tail = self.snake.step(action=action)
             # Check if snake is outside bounds
-            if ...:
-                self.snake.alive = ...
+            if (new_snake_head[0] <= 0 or new_snake_head[0] >= self.world.shape[0]) or \
+                (new_snake_head[1] <= 0 or new_snake_head[1] >= self.world.shape[1]):
+                self.snake.alive = False
             # Check if snake eats itself
-            elif ...:
-                self.snake.alive = ...
+            elif new_snake_head in self.snake.blocks[1:]:
+                self.snake.alive = False
             #  Check if snake eats the food
-            if ...:
+            if new_snake_head == self.food_position:
                 # Remove old food
-                self.food_position = ...
+                self.food_position = None
                 # Add tail again
-                self.snake.blocks = ...
+                self.snake.blocks = self.snake.blocks.append(old_snake_tail)
                 # Request to place new food
-                new_food_needed = ...
+                new_food_needed = True
                 # update reward
-                reward = ...
+                reward = self.eat_reward
             elif self.snake.alive:
                 # Didn't eat anything, move reward
-                reward = ...
+                reward = self.move_reward
         # Compute done flag and assign dead reward
-        done = not ...
+        done = not self.snake.alive
         reward = reward if self.snake.alive else self.dead_reward
         # Adding new food
         if new_food_needed:
-            ...
+            self.init_food()
 
         return reward, done, self.snake.blocks
