@@ -24,10 +24,11 @@ class SnakeEnv(gym.Env):
         self.start_position = start_position
         self.start_direction_index = start_direction_index
         self.food_position = food_position
+        self.config = config
         #  Set size of the game world
         self.size = config["size"]
         # Create world
-        self.world = World(self.size, self.start_position, self.start_direction_index, self.food_position, config)
+        self.world = self.create_world()
         # Init current step for future usage
         self.current_step = 0
         # Init alive flag
@@ -51,12 +52,19 @@ class SnakeEnv(gym.Env):
         # Check if game is ended
         #if not self.alive:
         # Perform the action
-        reward, done, snake = ...
+        reward, done, snake = self.world.move_snake(action=action)
         # Disable interactions if snake dead
         if not self.alive:
-            ...
+            self.action_space = None
 
         return self.world.get_observation(), reward, done, snake
+    
+    def create_world(self):
+        return World(size=self.size,
+                    start_position=self.start_position,
+                    start_direction_index=self.start_direction_index,
+                    food_position=self.food_position,
+                    config=self.config)
 
     def reset(self):
         """
@@ -66,9 +74,9 @@ class SnakeEnv(gym.Env):
         # Reset step counters
 
         # Set 'alive' flag
-        self.alive = ...
+        self.alive = False
         # Create world
-        self.world = ...
+        self.world = self.create_world()
 
         return self.world.get_observation()
 
