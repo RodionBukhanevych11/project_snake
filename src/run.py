@@ -11,7 +11,7 @@ def interact():
     env = SnakeEnv()
     done = False
     r = 0
-    action = ...
+    action = None
     while not done:
         if msvcrt.kbhit():
             key = msvcrt.getch().decode('utf-8')
@@ -28,10 +28,12 @@ def interact():
             elif key == 'd':
                 action = 1
 
-        obs, reward, done, info = ...
+        if action:
+            _, reward, done, _ = env.step(action)
         env.render(mode='human')
         r += reward
         time.sleep(0.4)
+        
     return r
 
 
